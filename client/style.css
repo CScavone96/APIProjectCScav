@@ -1,0 +1,93 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#top {
+  text-align: center;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 3.2em;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-weight: bold;
+}
+
+#content {
+  font-size: 1.25em;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 5%;
+}
+
+#CommentContent {
+  font-size: 1.25em;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 10%;
+}
+
+.comment{
+	margin-left: -10%;
+}
+
+#emailID{
+	display: none;
+}
+
+#toFrom {
+  margin-left: 5%;
+}
+
+#searchButton{
+	margin-top: 2%;
+}
+
+#searchType{ direction: rtl; }
+
+#pdfLink{
+  display:block;
+  font-size: 0.9em;
+  text-align: center;
+}
+a:link {
+    color: #000000;
+	text-decoration: none;
+}
+
+a:visited  {
+    color: #000000;
+	text-decoration: none;
+}
+
+a:hover  {
+    color: #000000;
+	text-decoration: none;
+}
+
+#content a:link {
+    color: #0000b3;
+	font-size: 1.25em;
+}
+
+#content a:visited  {
+    color: #666666;
+}
+
+#content a:hover  {
+    color: #333333;
+}
+
+#EmailContent a:link {
+    color: #0000bf;
+	font-size: 1.25em;
+}
+
+#EmailContent a:visited  {
+    color: #000066;
+}

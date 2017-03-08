@@ -1,0 +1,37 @@
+{
+  "name": "apiprojectcscav",
+  "version": "1.0.0",
+  "engines": {
+    "node": "7.1.0",
+    "npm": "3.10.x"
+  },
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "crypto": "^0.0.3",
+    "eslint": "^3.16.1",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0"
+  },
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CScavone96/APIProjectCScav.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CScavone96/APIProjectCScav/issues"
+  },
+  "homepage": "https://github.com/CScavone96/APIProjectCScav#readme"
+}

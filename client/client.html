@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Our simple HTTP server</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script src ="/client.js"></script>
+</head>
+<body>
+  <section id="top">
+    <a href="./"><h1>Hillary Clinton Campaign Email Search</h1></a>
+    <form id="searchForm">
+	  <select id='searchType'>
+      <option value='/sender'>Sender</option>
+      <option value='/recipient'>Recipient</option>
+	  <option value='/subject'>Subject</option>
+      </select>
+      <label for="searchName">Search: </label>
+      <input id="search" type="text" name="searchName" />
+    </form>
+    <input id="searchButton" type="submit" value="Search" />
+  </section>
+  <div id="content">
+  </div>
+</body>
+</html>

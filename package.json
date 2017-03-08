@@ -1,6 +1,13 @@
 {
   "name": "apiprojectcscav",
   "version": "1.0.0",
+  "eslintConfig": {
+    "env": 
+	{
+    "browser": true,
+    "node": true
+    }
+  },
   "engines": {
     "node": "7.1.0",
     "npm": "3.10.x"

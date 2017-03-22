@@ -9,12 +9,11 @@
 // Handles XHR response data
 const handleResponse = (xhr) => {
   const content = document.querySelector('#content');
+  const topContent = document.querySelector('#top');
+  topContent.style.display = "inherit";
+  content.style.display = "inherit";
   switch (xhr.status) {
     case 200: {
-      const topContent = document.querySelector('#top');
-      topContent.style.display = "inherit";
-      const content = document.querySelector('#content');
-      content.style.display = "inherit";
       const parsedJSON = JSON.parse(xhr.responseText);
       content.innerHTML = '';
       for (let i = 0; i < parsedJSON.length; i++) {
@@ -46,7 +45,7 @@ const handleResponse = (xhr) => {
       break;
     }
     case 204: {
-      content.innerHTML = '<b>Modified</b><br>';
+      content.innerHTML = '<b>No Results</b><br>';
       break;
     }
     case 401: {
@@ -92,6 +91,8 @@ const sendAjaxSearch = (url, param, page) => {
   window.history.pushState('string', 'Title', '/');
   const topContent = document.querySelector('#top');
   topContent.style.display = "none";
+  const content = document.querySelector('#content');
+  content.style.display = "none";
   const emailContent = document.querySelector('#EmailContent');
   let params = '';
   if (typeof (emailContent) !== 'undefined' && emailContent != null) {

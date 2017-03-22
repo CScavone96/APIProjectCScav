@@ -85,6 +85,7 @@ const sendAjaxRes = (url) => {
 // Asynchronous handle response for arrays
 const asyncHandleResponseArr = (request, response, xhr, page) => {
   let i;
+  //console.log(IsJsonString(xhr.responseText));
   if (IsJsonString(xhr.responseText)) {
     const parsedJSON = JSON.parse(xhr.responseText);
     if (parsedJSON.length > 10) {
@@ -97,6 +98,14 @@ const asyncHandleResponseArr = (request, response, xhr, page) => {
         // return null;
       }
     } else {
+      if(parsedJSON.length == 0){
+        const responseJSON = {
+        message: 'The search did not return any content.',
+        id: 'noContent',
+      };
+      return respond(request, response, 204, responseJSON, false); 
+      }
+      else{
       for (i = 0; i < parsedJSON.length; i++) {
         if (i === (parsedJSON.length) - 1) {
           sendAjaxResFinal(request, response, LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
@@ -104,6 +113,7 @@ const asyncHandleResponseArr = (request, response, xhr, page) => {
         }
         sendAjaxRes(LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
         // return null;
+      }
       }
     }
   } else {
@@ -200,7 +210,8 @@ const sender = (request, response, params) => {
     };
     return respond(request, response, 400, responseJSON, false);
   }
-  return sendAjaxArr(request, response, LEAKURL.concat('from/').concat(API_KEY).concat('/').concat(params.search), page);
+  sendAjaxArr(request, response, LEAKURL.concat('from/').concat(API_KEY).concat('/').concat(params.search), page);
+  return null;
 };
 
 // To load email by ID

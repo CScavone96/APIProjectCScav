@@ -98,7 +98,7 @@ const asyncHandleResponseArr = (request, response, xhr, page) => {
         // return null;
       }
     } else {
-      if(parsedJSON.length == 0){
+      if(parsedJSON.length === 0){
         const responseJSON = {
         message: 'The search did not return any content.',
         id: 'noContent',

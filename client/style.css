@@ -15,6 +15,10 @@ html, body {
   text-align: left;
 }
 
+#CommentContent {
+  text-align: left;
+}
+
 h1 {
   font-size: 3.2em;
   margin-top: 2%;

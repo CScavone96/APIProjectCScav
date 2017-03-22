@@ -124,6 +124,10 @@ const goToNextPage = (tf) => {
     currentPage++;
     const content = document.querySelector('#content');
     content.style.display = "none";
+    const topcontent = document.querySelector('#top');
+    if(topcontent){
+        topcontent.style.display = "none";
+    }
     const typeSelector = document.querySelector('#searchType');
     const typeName = typeSelector.options[typeSelector.selectedIndex].value;
     const param = document.querySelector('#search').value;
@@ -137,6 +141,11 @@ const goToLastPage = (tf) => {
     currentPage--;
     const content = document.querySelector('#content');
     content.style.display = "none";
+    const topcontent = document.querySelector('#top');
+    if(topcontent){
+        topcontent.style.display = "none";
+    }
+    topcontent.style.display = "none";
     const typeSelector = document.querySelector('#searchType');
     const typeName = typeSelector.options[typeSelector.selectedIndex].value;
     const param = document.querySelector('#search').value;
@@ -159,7 +168,7 @@ const postAjax = (url) => {
 // Submits comment
 const submitComment = (tf) => {
   if (tf) {
-    const commentText = process.env.document.querySelector('#commentText').value;
+    const commentText = document.querySelector('#commentText').value;
     postAjax('/comment');
     if (commentText.replace(/\s/g, '').length > 0) {
       window.location.reload();

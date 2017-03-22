@@ -1,7 +1,7 @@
 const http = require('http');
 const url = require('url');
 const query = require('querystring');
-const { getIndex, getStyle, getClient } = require('./htmlResponses.js');
+const { getIndex, getStyle } = require('./htmlResponses.js');
 const { notFound, sender, subject, recipient, id, comment } = require('./jsonResponses.js');
 
 const PORT = process.env.PORT || process.env.NODE_PORT || 3000;
@@ -9,7 +9,6 @@ const PORT = process.env.PORT || process.env.NODE_PORT || 3000;
 const urlStruct = {
   '/': getIndex,
   '/style.css': getStyle,
-  '/client.js': getClient,
   '/subject': subject,
   '/recipient': recipient,
   '/sender': sender,

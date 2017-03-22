@@ -3,12 +3,16 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #top {
-  text-align: center;
   margin: 0 auto;
+}
+
+#content {
+  text-align: left;
 }
 
 h1 {

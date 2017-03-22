@@ -12,13 +12,13 @@ const comments = new Map();
 const respond = (request, response, status, object, etag) => {
   if (typeof (object) !== 'undefined') {
     const hash = crypto.createHash('md5').update(JSON.stringify(object)).digest('hex').slice(0, 6);
-    if (etag && hash === currentHash)	{
+    if (etag && hash === currentHash) {
       response.setHeader('ETag', hash);
       response.setHeader('if-none-match', hash);
       response.setHeader('Vary', 'Accept-Encoding');
       response.writeHead(304);
       response.end();
-    } else	{
+    } else {
       currentHash = hash;
       response.setHeader('ETag', hash);
       response.setHeader('if-none-match', hash);
@@ -27,65 +27,6 @@ const respond = (request, response, status, object, etag) => {
       response.write(JSON.stringify(object));
       response.end();
     }
-  }
-};
-
-// Returns for not found 404 requests
-const notFound = (request, response) => {
-  const responseJSON = {
-    message: 'The page you are looking for was not found.',
-    id: 'notFound',
-  };
-  return respond(request, response, 404, responseJSON, false);
-};
-
-// Tests if string is acceptable JSON
-function IsJsonString(str) {
-  try {
-    JSON.parse(str);
-  } catch (e) {
-    return false;
-  }
-  return true;
-} // http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try
-
-// Loading asynch
-const sendAjaxRes = (url) => {
-  const xhr = new XMLHttpRequest();
-  console.log(url);
-  xhr.onload = () => asynchHandlerArr(xhr);
-  xhr.open('GET', url, false);
-  xhr.responseType = 'document';
-  xhr.send();
-};
-
-// Asynchronous handle response for arrays
-const asyncHandleResponseArr = (request, response, xhr, page) => {
-  if (IsJsonString(xhr.responseText)) {
-    const parsedJSON = JSON.parse(xhr.responseText);
-    if (parsedJSON.length > 10)	{
-      for (var i = page * 10; i < (parseInt(page) + 1) * 10; i++) {
-	    if (i === ((parseInt(page) + 1) * 10) - 1)		{
-      sendAjaxResFinal(request, response, LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
-	    } else		{
-      sendAjaxRes(LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
-	    }
-      }
-    } else	{
-      for (var i = 0; i < parsedJSON.length; i++) {
-	    if (i === (parsedJSON.length) - 1)		{
-      sendAjaxResFinal(request, response, LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
-    } else {
-      sendAjaxRes(LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
-    }
-      }
-    }
-  } else {
-    const responseJSON = {
-      message: 'The API is under heavy load, please try again soon.',
-	  id: 'serviceUnavailable',
-    };
-    return respond(request, response, 503, responseJSON, false);
   }
 };
 
@@ -102,6 +43,79 @@ const asynchHandlerArrFinal = (request, response, xhr) => {
   return respond(request, response, 200, clone, false);
 };
 
+// Returns for not found 404 requests
+const notFound = (request, response) => {
+  const responseJSON = {
+    message: 'The page you are looking for was not found.',
+    id: 'notFound',
+  };
+  return respond(request, response, 404, responseJSON, false);
+};
+
+// Last loaded asynch
+const sendAjaxResFinal = (request, response, url) => {
+  const xhr = new XMLHttpRequest();
+  // console.log(url);
+  xhr.onload = () => asynchHandlerArrFinal(request, response, xhr);
+  xhr.open('GET', url, false);
+  xhr.responseType = 'document';
+  xhr.send();
+};
+
+// Tests if string is acceptable JSON
+function IsJsonString(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+} // http://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string-in-javascript-without-using-try
+
+// Loading asynch
+const sendAjaxRes = (url) => {
+  const xhr = new XMLHttpRequest();
+  // console.log(url);
+  xhr.onload = () => asynchHandlerArr(xhr);
+  xhr.open('GET', url, false);
+  xhr.responseType = 'document';
+  xhr.send();
+};
+
+// Asynchronous handle response for arrays
+const asyncHandleResponseArr = (request, response, xhr, page) => {
+  let i;
+  if (IsJsonString(xhr.responseText)) {
+    const parsedJSON = JSON.parse(xhr.responseText);
+    if (parsedJSON.length > 10) {
+      for (i = page * 10; i < (parseInt(page, 10) + 1) * 10; i++) {
+        if (i === ((parseInt(page, 10) + 1) * 10) - 1) {
+          sendAjaxResFinal(request, response, LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
+          // return null;
+        }
+        sendAjaxRes(LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
+        // return null;
+      }
+    } else {
+      for (i = 0; i < parsedJSON.length; i++) {
+        if (i === (parsedJSON.length) - 1) {
+          sendAjaxResFinal(request, response, LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
+          // return null;
+        }
+        sendAjaxRes(LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(parsedJSON[i].id));
+        // return null;
+      }
+    }
+  } else {
+    const responseJSON = {
+      message: 'The API is under heavy load, please try again soon.',
+      id: 'serviceUnavailable',
+    };
+    return respond(request, response, 503, responseJSON, false);
+  }
+  return null;
+};
+
 // For submitting comments
 const comment = (request, response) => {
   let jsonString = '';
@@ -113,14 +127,14 @@ const comment = (request, response) => {
     const paramsNew = jsonString.split('&');
     const commentText = paramsNew[0].slice(((paramsNew[0].indexOf('=')) + 1));
     const id = paramsNew[1].slice(((paramsNew[1].indexOf('=')) + 1));
-    console.log(`COMMENT LENGTH:  ${commentText.replace(/\s/g, '').length}`);
+    // console.log(`COMMENT LENGTH:  ${commentText.replace(/\s/g, '').length}`);
     if (commentText.replace(/\s/g, '').length > 0) {
       response.writeHead(201);
       if (typeof (comments.get(id)) !== 'undefined') {
         const newComments = comments.get(id);
         newComments.push(commentText);
         comments.set(id, newComments);
-      }		else {
+      } else {
         comments.set(id, [commentText]);
       }
       const responseJSON = {
@@ -141,20 +155,10 @@ const comment = (request, response) => {
   });
 };
 
-// Last loaded asynch
-const sendAjaxResFinal = (request, response, url) => {
-  const xhr = new XMLHttpRequest();
-  console.log(url);
-  xhr.onload = () => asynchHandlerArrFinal(request, response, xhr);
-  xhr.open('GET', url, false);
-  xhr.responseType = 'document';
-  xhr.send();
-};
-
 // Sends ajax for array
 const sendAjaxArr = (request, response, url, page) => {
   const xhr = new XMLHttpRequest();
-  console.log(url);
+  // console.log(url);
   xhr.onload = () => asyncHandleResponseArr(request, response, xhr, page);
   xhr.open('GET', url);
   xhr.responseType = 'document';
@@ -164,7 +168,7 @@ const sendAjaxArr = (request, response, url, page) => {
 // Preforms Get AJAX request
 const sendAjax = (request, response, url) => {
   const xhr = new XMLHttpRequest();
-  console.log(url);
+  // console.log(url);
   // xhr.onload = () => handleResponse(request, response, xhr);
   xhr.open('GET', url, false);
   xhr.responseType = 'document';
@@ -175,7 +179,7 @@ const sendAjax = (request, response, url) => {
 // Performs GET ajax request
 const getAjax = (request, response, url) => {
   const xhr = new XMLHttpRequest();
-  console.log(url);
+  // console.log(url);
   // xhr.onload = () => handleResponse(request, response, xhr);
   xhr.open('GET', url, false);
   xhr.responseType = 'document';
@@ -192,23 +196,24 @@ const sender = (request, response, params) => {
   if (!params.search || params.search.length < 1) {
     const responseJSON = {
       message: 'Missing search information',
-	  id: 'badRequest',
+      id: 'badRequest',
     };
     return respond(request, response, 400, responseJSON, false);
   }
-  sendAjaxArr(request, response, LEAKURL.concat('from/').concat(API_KEY).concat('/').concat(params.search), page);
+  return sendAjaxArr(request, response, LEAKURL.concat('from/').concat(API_KEY).concat('/').concat(params.search), page);
 };
 
 // To load email by ID
 const id = (request, response, params) => {
   if (!params.id || params.id.length < 1) {
     const responseJSON = {
-	  message: 'Missing ID information',
-	  id: 'badRequest',
+      message: 'Missing ID information',
+      id: 'badRequest',
     };
     return respond(request, response, 400, responseJSON, false);
   }
   sendAjax(request, response, LEAKURL.concat('id/').concat(API_KEY).concat('/').concat(params.id));
+  return null;
 };
 
 // For searching subjects
@@ -219,12 +224,13 @@ const subject = (request, response, params) => {
   }
   if (!params.search || params.search.length < 1) {
     const responseJSON = {
-	  message: 'Missing search information',
-	  id: 'badRequest',
+      message: 'Missing search information',
+      id: 'badRequest',
     };
     return respond(request, response, 400, responseJSON, false);
   }
   sendAjaxArr(request, response, LEAKURL.concat('subject/').concat(API_KEY).concat('/').concat(params.search), page);
+  return null;
 };
 
 // For searching recipients
@@ -235,12 +241,13 @@ const recipient = (request, response, params) => {
   }
   if (!params.search || params.search.length < 1) {
     const responseJSON = {
-	  message: 'Missing search information',
+      message: 'Missing search information',
       id: 'badRequest',
     };
     return respond(request, response, 400, responseJSON, false);
   }
   sendAjaxArr(request, response, LEAKURL.concat('to/').concat(API_KEY).concat('/').concat(params.search), page);
+  return null;
 };
 
 
